@@ -20,6 +20,27 @@ try{
     $email = $_POST['email'];
 
     // TODO : Validation
+    $nomError = "";
+    $prenomError = "";
+    $emailError = "";
+
+    if(empty($nom)){
+        $nomError = "Le Nom est obligatoire";
+    }else {
+        $nom = valideData($nom);
+    }
+
+    if(empty($prenom)){
+        $prenomError = "Le prenom est obligatoire";
+    }else {
+        $prenom = valideData($prenom);
+    }
+
+    if(empty($email)){
+        $emailError = "Le email est obligatoire";
+    }else {
+        $email = valideData($email);
+    }
 
     //traitement
     $sql = "insert into stagiaires(nom,prenom,email) 
@@ -37,4 +58,12 @@ catch(PDOException $ex){
 }
 
 $conn = null;
+}
+
+function valideData($data)
+{
+    $data = htmlspecialchars($data);
+    $data = stripslashes($data);
+    $data = trim($data);
+    return $data;
 }
