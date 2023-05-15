@@ -10,6 +10,13 @@ try{
     $conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
     //traitement
+    $id = $_GET['id'];
+
+    $sql = "select * from stagiaires where id = $id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    $stagiaire = $stmt->fetch(PDO::FETCH_OBJ);
 
 }
 catch(PDOException $ex){
@@ -67,51 +74,28 @@ catch(PDOException $ex){
     </nav>
 
     <div class="container my-5">
-      <h1>Liste des stagiaires 
-        <small><a href="create.php" class="btn btn-primary btn-sm">+ Nouveau</a></small></h1>
-      <div class="col-lg-10 px-0">
-        <table class="table">
-            <thead>
-                <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Prenom</th>
-                <th scope="col">Email</th>
-                <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                try {
-
-                    $sql = "SELECT * FROM stagiaires";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->execute();
-                
-                    foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $v) {
-                    ?>
-                            <tr>
-                                <th scope="row"><?php echo $v->ID ?></th>
-                                <td><?php echo $v->nom ?></td>
-                                <td><?php echo $v->prenom ?></td>
-                                <td><?php echo $v->email ?></td>
-                                <td>
-                                    <a href="edit.php?id=<?php echo $v->ID ?>" class="btn btn-warning btn-sm">Modifier</a>
-                                    <a href="delete.php?id=<?php echo $v->ID ?>" 
-                                        onclick="return confirm('Voulez vous vraiment supprimer ce stagiaire ?')" 
-                                        class="btn btn-danger btn-sm">Supprimer</a>
-                                </td>
-                            </tr>
-                    <?php
-                    }
-                    
-                } catch(PDOException $e) {
-                    echo "Error: " . $e->getMessage();
-                }
-                $conn = null;
-                ?>
-            </tbody>
-        </table>
+      <h1>Edit stagiaire 
+        <small><a href="index.php" class="btn btn-primary btn-sm">Tous les stagiaires</a></small></h1>
+      <div class="col-lg-8 px-0">
+        
+      <form method="POST" action="update.php?id=<?php echo $stagiaire->ID ?>">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom"
+              value="<?php echo $stagiaire->nom ?>">
+          </div>
+          <div class="mb-3">
+            <label for="prenom" class="form-label">Prenom</label>
+            <input type="text" class="form-control" id="prenom" name="prenom"
+            value="<?php echo $stagiaire->prenom ?>">
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email"
+            value="<?php echo $stagiaire->email ?>">
+          </div>
+          <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
       </div>
     </div>
 
